@@ -7,7 +7,6 @@
 bool is_char_same(char c_begin,char c_end)
 {
     // Compare two characters in a case-insensitive way.
-    // Cast to unsigned char to avoid undefined behavior with std::tolower.
     return std::tolower(static_cast<unsigned char>(c_begin)) ==
            std::tolower(static_cast<unsigned char>(c_end));
 }
