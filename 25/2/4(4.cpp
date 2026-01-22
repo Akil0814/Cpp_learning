@@ -2,7 +2,7 @@
 using namespace std;
 
 template<class T,int len>
-class LinkList//链表列模板
+class LinkList//链表类模板
 {
 public:
  T* m_head; //链表头结点
