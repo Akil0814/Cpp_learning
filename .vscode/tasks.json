@@ -1,52 +1,97 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "Compile",
-            "command": "g++",
-            "args": [
-                "${file}",
-                "-o",
-                "${fileDirname}/${fileBasenameNoExtension}.exe",
-                "-g",
-                "-Wall",
-                "-static-libgcc",
-                "-fexec-charset=utf-8",
-                "-pthread"   //添加线程支持
-            ],
-            "type": "process",
-            "group": "build",
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared"
-            },
-            "problemMatcher": "$gcc"
-        },
-        {
-            "type": "cppbuild",
-            "label": "C/C++: g++.exe 生成活动文件",
-            "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
-            "args": [
-                "-fdiagnostics-color=always",
-                "-g",
-                "${file}",
-                "-o",
-                "${fileDirname}\\${fileBasenameNoExtension}.exe",
-                "-pthread"   //添加线程支持
-            ],
-            "options": {
-                "cwd": "${fileDirname}"
-            },
-            "problemMatcher": [
-                "$gcc"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "detail": "调试器生成的任务。"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Compile",
+      "command": "g++",
+      "args": [
+        "${file}",
+        "-o",
+        "${fileDirname}/${fileBasenameNoExtension}.exe",
+        "-g",
+        "-Wall",
+        "-static-libgcc",
+        "-fexec-charset=utf-8",
+        "-pthread"
+      ],
+      "type": "process",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      },
+      "problemMatcher": "$gcc"
+    },
+    {
+      "type": "cppbuild",
+      "label": "C/C++: g++.exe build active file",
+      "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-g",
+        "${file}",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "-pthread"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+
+    {
+      "label": "Compile (SQLite via vcpkg)",
+      "type": "process",
+      "command": "C:\\Program Files\\mingw64\\bin\\g++.exe",
+      "args": [
+        "-fdiagnostics-color=always",
+        "-std=c++17",
+        "-g",
+        "-Wall",
+        "-Wextra",
+        "${file}",
+        "-I",
+        "${env:VCPKG_ROOT}\\installed\\x64-mingw-dynamic\\include",
+        "-L",
+        "${env:VCPKG_ROOT}\\installed\\x64-mingw-dynamic\\lib",
+        "-lsqlite3",
+        "-o",
+        "${fileDirname}\\${fileBasenameNoExtension}.exe",
+        "-pthread"
+      ],
+      "options": {
+        "cwd": "${fileDirname}"
+      },
+      "problemMatcher": ["$gcc"]
+    },
+    {
+      "label": "Copy sqlite3.dll (runtime)",
+      "type": "process",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-Command",
+        "Copy-Item -Force \"$env:VCPKG_ROOT\\installed\\x64-mingw-dynamic\\bin\\sqlite3.dll\" \"${fileDirname}\\sqlite3.dll\""
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Build SQLite + DLL",
+      "dependsOn": ["Compile (SQLite via vcpkg)", "Copy sqlite3.dll (runtime)"],
+      "problemMatcher": [],
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      }
+    }
+  ]
 }
