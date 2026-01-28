@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include "deck.h"
 #include "card.h"
 
@@ -14,7 +16,7 @@ public:
 		return deck_factory;
 	}
 
-	Deck* create_deck(int cards_count=52);
+	std::unique_ptr<Deck> create_deck(int cards_count=52);
 
 
 private:

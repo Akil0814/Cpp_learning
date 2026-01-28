@@ -7,7 +7,7 @@ class Card
 public:
 
     enum class Suit { Clubs,Diamonds,Hearts,Spades };
-    enum class Rank { Ace=1, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King };
+    enum class Rank { Ace, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King };
 
 public:
     Card(Suit suit, Rank rank) : suit_(suit), rank_(rank){}
