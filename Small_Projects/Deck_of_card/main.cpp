@@ -6,6 +6,8 @@
 #include "deck_factory.h"
 #include "card.h"
 
+//g++ -std=c++17 -g *.cpp -o main.exe -pthread
+
 int main()
 {
     std::cout << "Creating Deck..." << std::endl;
