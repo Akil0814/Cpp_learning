@@ -6,7 +6,7 @@
 int main()
 {
     Card card(Card::Suit::Hearts, Card::Rank::Ace);
-    //std::cout << card << std::endl;
+    std::cout << card << std::endl;
 
 
     return 0;

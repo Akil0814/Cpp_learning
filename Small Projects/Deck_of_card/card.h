@@ -1,4 +1,6 @@
+#pragma once
 #include <iostream>
+#include <compare>
 
 class Card
 {
@@ -10,6 +12,12 @@ public:
 public:
     Card(Suit suit, Rank rank) : suit_(suit), rank_(rank){}
     ~Card() = default;
+
+    Card operator++(int);
+    Card& operator++();
+
+    bool operator==(const Card& other) const;
+    bool operator!=(const Card& other) const;
 
     Suit getSuit() const ;
     Rank getRank() const;

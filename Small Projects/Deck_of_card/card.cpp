@@ -1,8 +1,37 @@
 #include "card.h"
-#include <ostream>
 
 Card::Suit Card::getSuit() const { return suit_; };
 Card::Rank Card::getRank() const { return rank_; };
+
+Card& Card::operator++()
+{
+    if (rank_ == Rank::King)
+    {
+        rank_ = Rank::Ace;
+        suit_ = static_cast<Suit>((static_cast<int>(suit_) + 1) % 4);
+    }
+    else
+        rank_ = static_cast<Rank>(static_cast<int>(rank_) + 1);
+
+    return *this;
+}
+
+Card Card::operator++(int)
+{
+    Card tmp = *this;
+    ++(*this);
+    return tmp;
+}
+
+bool Card::operator==(const Card& other) const
+{
+    return suit_ == other.suit_ && rank_ == other.rank_;
+}
+
+bool Card::operator!=(const Card& other) const
+{
+    return !(*this == other);
+}
 
 std::ostream& operator<<(std::ostream& os, const Card& card)
 {
