@@ -1,3 +1,18 @@
+//use for compil: g++ -std=c++17 -g *.cpp -o main.exe -pthread
+//to get out put ./main.exe >> out.txt
+/*
+Deck_of_card/
+├──card.h
+├──deck.h
+├──deck_factory.h
+├──card.cpp
+├── deck.cpp
+├── deck_factory.cpp
+├── main.cpp
+├── out.txt
+└── README.md
+*/
+
 #include <iostream>
 #include <vector>
 #include <memory>
@@ -6,7 +21,7 @@
 #include "deck_factory.h"
 #include "card.h"
 
-//g++ -std=c++17 -g *.cpp -o main.exe -pthread
+
 
 int main()
 {
