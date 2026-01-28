@@ -1,5 +1,13 @@
-int main
-{
+#include <iostream>
+#include <vector>
+#include "card.h"
+#include "deck.h"
 
-    retunr 0;
+int main()
+{
+    Card card(Suit::Hearts, Rank::Ace);
+    std::cout << card << std::endl;
+
+
+    return 0;
 }
