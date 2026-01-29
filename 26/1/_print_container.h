@@ -2,33 +2,17 @@
 #include <type_traits>
 #include <utility>
 
-template<class>
-inline constexpr bool dependent_false_v = false;
+#include"_check_container_type.h"
 
-#ifndef CPP20_OR_LATER
+
+//#ifndef CPP20_OR_LATER
+//#else
+//#endif
 //----------------------FOR C++ 20 AND LATER-------------------------------
-template<class T>
-concept Iterable = requires(T t)
-{
-    std::begin(t);
-    std::end(t);
-};
 
-template<class T>
-concept StackLike = requires(T t)
-{
-    { t.empty() } -> std::convertible_to<bool>;
-    t.top();
-    t.pop();
-};
 
-template<class T>
-concept QueueLike = requires(T t)
+namespace ct  // container tools
 {
-    { t.empty() } -> std::convertible_to<bool>;
-    t.front();
-    t.pop();
-};
 
 template<Iterable C>
 void print_container(const C& c)
@@ -68,8 +52,9 @@ void print_container(const T&)
         "print_container: type is not iterable(begin/end), not stack-like(top/pop/empty), not queue-like(front/pop/empty).");
 }
 
-#else
+
 //----------------------FOR C++ 17 AND LOWER-------------------------------
+/*
 namespace detail
 {
 template<class...>
@@ -144,4 +129,6 @@ void print_container(const T&)
     static_assert(dependent_false_v<T>,
         "print_container: type is not iterable(begin/end), not stack-like(top/pop/empty), not queue-like(front/pop/empty).");
 }
-#endif
+*/
+
+}

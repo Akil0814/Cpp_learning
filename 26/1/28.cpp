@@ -6,11 +6,9 @@
 
 #include "_print_container.h"
 #include "_my_stack.h"
-#include "_remove_from_container.h"
+#include "_container_modify.h"
 
 //IMplment  a Qveue with a deque ! Adapter//
-
-
 
 int main()
 {
@@ -35,14 +33,14 @@ int main()
     std::deque<std::string> deque_2 = {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"};
 
     std::cout<<"--------------PART A-----------------"<<std::endl;
-    print_container(stack_1);
-    print_container(stack_2);
+    ct::print_container(stack_1);
+    ct::print_container(stack_2);
 
     std::cout<<"--------------PART B-----------------"<<std::endl;
-    remove_from_stack(stack_1,789.6);
-    remove_from_stack(stack_2,"Donald");
-    print_container(stack_1);
-    print_container(stack_2);
+    ct::pop_until_removed(stack_1,789.6);
+    ct::pop_until_removed(stack_2,"Donald");
+    ct::print_container(stack_1);
+    ct::print_container(stack_2);
 
     std::cout<<"--------------PART C-----------------"<<std::endl;
     MTL_A::Stack<double> my_stack_1;
@@ -52,10 +50,17 @@ int main()
     for (std::string x : {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"})
         my_stack_2.push(x);
 
-    print_container(my_stack_1);
-    print_container(my_stack_2);
+    ct::print_container(my_stack_1);
+    ct::print_container(my_stack_2);
 
     std::cout<<"--------------PART D-----------------"<<std::endl;
+    ct::pop_until_removed(my_stack_1,789.6);
+    ct::pop_until_removed(my_stack_2,"Donald");
+    ct::print_container(my_stack_1);
+    ct::print_container(my_stack_2);
+
+    std::cout<<"--------------PART E-----------------"<<std::endl;
+
 
 
 
