@@ -1,17 +1,22 @@
 #include<iostream>
 #include<vector>
 #include<stack>
-
-#include <type_traits>
-#include <utility>
+#include<queue>
+#include<deque>
 
 #include "_print_container.h"
+#include "_my_stack.h"
+#include "_remove_from_container.h"
 
 //IMplment  a Qveue with a deque ! Adapter//
+
+
 
 int main()
 {
     std::cout<<"Current C++ ver:"<<__cplusplus<<std::endl;
+
+
     std::stack<double> stack_1;
     for (double x : {222.22, 44.44, 789.6, 123.45, 88.64, 123.123})
         stack_1.push(x);
@@ -19,8 +24,40 @@ int main()
     for (std::string x : {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"})
         stack_2.push(x);
 
-    print_container(stack_2);
+    std::queue<double> queue_1;
+    for (double x : {222.22, 44.44, 789.6, 123.45, 88.64, 123.123})
+        queue_1.push(x);
+    std::queue<std::string> queue_2;
+    for (std::string x : {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"})
+        queue_2.push(x);
+
+    std::deque<double> deque_1 = {222.22, 44.44, 789.6, 123.45, 88.64, 123.123};
+    std::deque<std::string> deque_2 = {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"};
+
+    std::cout<<"--------------PART A-----------------"<<std::endl;
     print_container(stack_1);
+    print_container(stack_2);
+
+    std::cout<<"--------------PART B-----------------"<<std::endl;
+    remove_from_stack(stack_1,789.6);
+    remove_from_stack(stack_2,"Donald");
+    print_container(stack_1);
+    print_container(stack_2);
+
+    std::cout<<"--------------PART C-----------------"<<std::endl;
+    MTL_A::Stack<double> my_stack_1;
+    for (double x : {222.22, 44.44, 789.6, 123.45, 88.64, 123.123})
+        my_stack_1.push(x);
+    MTL_A::Stack<std::string> my_stack_2;
+    for (std::string x : {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"})
+        my_stack_2.push(x);
+
+    print_container(my_stack_1);
+    print_container(my_stack_2);
+
+    std::cout<<"--------------PART D-----------------"<<std::endl;
+
+
 
     return 0;
 }

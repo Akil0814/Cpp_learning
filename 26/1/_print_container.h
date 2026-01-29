@@ -1,12 +1,12 @@
+#pragma once
 #include <type_traits>
 #include <utility>
 
 template<class>
 inline constexpr bool dependent_false_v = false;
 
-#if defined(__cpp_concepts) && (__cpp_concepts >= 201907L)
-//----------------------FOR C++ 20 AND HIGER-------------------------------
-// 1) 是否可迭代：有 begin/end
+#ifndef CPP20_OR_LATER
+//----------------------FOR C++ 20 AND LATER-------------------------------
 template<class T>
 concept Iterable = requires(T t)
 {
@@ -14,7 +14,6 @@ concept Iterable = requires(T t)
     std::end(t);
 };
 
-// 2) 是否 stack-like：empty/top/pop
 template<class T>
 concept StackLike = requires(T t)
 {
@@ -23,7 +22,6 @@ concept StackLike = requires(T t)
     t.pop();
 };
 
-// 3) 是否 queue-like：empty/front/pop
 template<class T>
 concept QueueLike = requires(T t)
 {
@@ -71,7 +69,7 @@ void print_container(const T&)
 }
 
 #else
-//----------------------FOR C++ 17 AND lOER-------------------------------
+//----------------------FOR C++ 17 AND LOWER-------------------------------
 namespace detail
 {
 template<class...>
