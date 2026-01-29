@@ -4,19 +4,14 @@
 namespace MTL_A
 {
 
-template <class T>
-class Stack
+template<typename T>
+class Queue
 {
-public:
-    Stack()= default;
-    ~Stack()
-    {
-        list.clear();
-    }
 
+public:
     void push(const T& x)
     {
-        list.push_front(x);
+        list.push_back(x);
     }
 
     bool pop()
@@ -24,7 +19,7 @@ public:
         return list.pop_front();
     }
 
-    T& top()
+    T& front()
     {
         return list.front();
     }
@@ -33,7 +28,6 @@ public:
     {
         return list.empty();
     }
-
 private:
     MTL_A::LinkedList<T> list;
 };
