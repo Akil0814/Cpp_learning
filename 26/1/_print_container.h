@@ -4,7 +4,7 @@
 template<class>
 inline constexpr bool dependent_false_v = false;
 
-#ifdef _defined(__cpp_concepts) && __cpp_concepts >= 201907L
+#if defined(__cpp_concepts) && (__cpp_concepts >= 201907L)
 //----------------------FOR C++ 20 AND HIGER-------------------------------
 // 1) 是否可迭代：有 begin/end
 template<class T>
@@ -36,7 +36,7 @@ template<Iterable C>
 void print_container(const C& c)
 {
     for (const auto& x : c)
-        std::cout << x << "\n";
+        std::cout << x << " ";
     std::cout << "\n";
 }
 
@@ -45,7 +45,7 @@ requires (!Iterable<S>)
 void print_container(S s)
 {
     while (!s.empty()) {
-        std::cout << s.top() << "\n";
+        std::cout << s.top() << " ";
         s.pop();
     }
     std::cout << "\n";
@@ -56,7 +56,7 @@ requires (!Iterable<Q> && !StackLike<Q>)
 void print_container(Q q)
 {
     while (!q.empty()) {
-        std::cout << q.front() << "\n";
+        std::cout << q.front() << " ";
         q.pop();
     }
     std::cout << "\n";
@@ -113,7 +113,7 @@ inline constexpr bool is_queuelike_v = is_queuelike<T>::value;
 template<class C, std::enable_if_t<detail::is_iterable_v<C>, int> = 0>
 void print_container(const C& c)
 {
-    for (const auto& x : c) std::cout << x << "\n";
+    for (const auto& x : c) std::cout << x << " ";
     std::cout << "\n";
 }
 
@@ -122,7 +122,7 @@ template<class S,
 void print_container(S s)
 {
     while (!s.empty()) {
-        std::cout << s.top() << "\n";
+        std::cout << s.top() << " ";
         s.pop();
     }
     std::cout << "\n";
@@ -133,7 +133,7 @@ template<class Q,
 void print_container(Q q)
 {
     while (!q.empty()) {
-        std::cout << q.front() << "\n";
+        std::cout << q.front() << " ";
         q.pop();
     }
     std::cout << "\n";
