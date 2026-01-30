@@ -4,11 +4,14 @@
 #include <iterator>
 #include <concepts>
 
-//----------------------FOR C++ 20 AND LATER-------------------------------
 //#ifndef __cplusplus >= 202002L
 //#else
 //#endif
-namespace ct
+
+
+
+//----------------------FOR C++ 20 AND LATER-------------------------------
+namespace ct   // container tools
 {
 
 template<class>

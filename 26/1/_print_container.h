@@ -8,10 +8,9 @@
 //#ifndef CPP20_OR_LATER
 //#else
 //#endif
+
 //----------------------FOR C++ 20 AND LATER-------------------------------
-
-
-namespace ct  // container tools
+namespace ct // container tools
 {
 
 template<Iterable C>

@@ -8,8 +8,10 @@
 // #else
 // #endif
 
+//----------------------FOR C++ 20 AND LATER-------------------------------
 namespace ct // container tools
 {
+
 
 template<Iterable C,typename T>
 void remove_from_container(C& c,const T& target)
