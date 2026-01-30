@@ -91,12 +91,11 @@ double evaluate(std::string s, char ver, double val)
         else if(c==')')
             time=0;
     }
-    for()
-
-
-    std::cout<<s<<" ,"<<std::endl;
-    std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
-    std::cout<<"max time (:"<<max_time<<std::endl;
+    
+    //for()
+    //std::cout<<s<<" ,"<<std::endl;
+    //std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
+    //std::cout<<"max time (:"<<max_time<<std::endl;
 
 
     return r;
