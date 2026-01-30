@@ -65,7 +65,7 @@ bool valid_parentheses(std::string s)
 double evaluate(std::string s, char ver, double val)
 {
     double r=0;
-
+    std::cout<<"string"<<s<<" ,"<<std::endl;
     for(auto &c: s)
     {
         if (c=='('||c=='['||c=='{')c = '(';
@@ -77,6 +77,8 @@ double evaluate(std::string s, char ver, double val)
     int max_time=0;
     char* priority=nullptr;
     int num_of_c=0;
+    MTL_A::Deque<char> chars;
+
     for(auto &c: s)
     {
         if(c=='(')
@@ -91,11 +93,19 @@ double evaluate(std::string s, char ver, double val)
         else if(c==')')
             time=0;
     }
-    
-    //for()
-    //std::cout<<s<<" ,"<<std::endl;
-    //std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
-    //std::cout<<"max time (:"<<max_time<<std::endl;
+    std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
+    std::cout<<"max time (:"<<max_time<<std::endl;
+
+    auto it = s.begin() + (priority - s.data());
+    for(char* p=priority+1; *p!=')';p++)
+    {
+        chars.push_back(*p);
+        s.erase(p)
+    }
+    ct::print_container(chars);
+
+    std::cout<<std::endl;
+
 
 
     return r;
