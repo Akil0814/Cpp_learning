@@ -3,6 +3,7 @@
 #include<stack>
 #include<queue>
 #include<deque>
+#include <cctype>
 
 #include "_print_container.h"
 #include "_container_modify.h"
@@ -62,15 +63,73 @@ bool valid_parentheses(std::string s)
     return true;
 }
 
-double evaluate(std::string s, char ver, double val)
+int calculate(MTL_A::Deque<char> cdp,char ver, double val)
+{
+    int arr1[10]={0};
+    int arr2[10]={0};
+    int t=0;
+    int* current_input=arr1;
+    char tmp;
+    int res1=0;
+    int res2=0;
+
+    while(!cdp.empty())
+    {
+        tmp=cdp.front();
+
+        if (std::isdigit(static_cast<unsigned char>(tmp)))
+        {
+            current_input[t] = tmp - '0';
+            t++;
+        }
+        else if(tmp=='+'||tmp=='-')
+        {
+            current_input=arr2;
+            t=0;
+        }
+        else if(tmp==ver)
+        {
+            for(int i=0;i<10;i++)
+            {
+                res1=res1+current_input[i];
+            }
+        }
+        else
+            static_assert("char","calculate:Un know ver.");
+        cdp.pop_front();
+    }
+    std::cout<<"-------show-----"<<std::endl;
+    ct::print_container(cdp);
+
+    for(int i=0;i<10;i++)
+    {
+        std::cout<<arr1[i];
+    }
+    std::cout<<std::endl;
+    for(int i=0;i<10;i++)
+    {
+        std::cout<<arr2[i];
+    }
+    std::cout<<std::endl;
+    std::cout<<"-------show-----"<<std::endl;
+
+
+
+    return 0;
+
+}
+
+std::string evaluate(std::string s, char ver, double val)
 {
     double r=0;
-    std::cout<<"string"<<s<<" ,"<<std::endl;
     for(auto &c: s)
     {
         if (c=='('||c=='['||c=='{')c = '(';
         if (c==')'||c==']'||c=='}') c = ')';
     }
+
+    std::cout<<"string"<<s<<" ,"<<std::endl;
+
 
 
     int time=0;
@@ -94,21 +153,29 @@ double evaluate(std::string s, char ver, double val)
             time=0;
     }
     std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
-    std::cout<<"max time (:"<<max_time<<std::endl;
 
-    auto it = s.begin() + (priority - s.data());
-    for(char* p=priority+1; *p!=')';p++)
+    size_t pos = static_cast<size_t>(priority - s.data()); // 起点下标
+    s.erase(pos, 1);
+    while (pos < s.size() && s[pos] != ')')
     {
-        chars.push_back(*p);
-        s.erase(p)
+        chars.push_back(s[pos]);
+        s.erase(pos, 1);
     }
+    s.erase(pos, 1);
+
     ct::print_container(chars);
+
+    std::cout<<"string after:"<<s<<" ,"<<std::endl;
+    s.insert(pos,std::to_string(calculate(chars,ver,val)));
+
+    std::cout<<"string after2:"<<s<<" ,"<<std::endl;
+
 
     std::cout<<std::endl;
 
 
 
-    return r;
+    return s;
 }
 
 
