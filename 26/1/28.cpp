@@ -225,7 +225,7 @@ std::string evaluate(std::string s, char ver, double val)
     if(std::isdigit(static_cast<unsigned char>(prev))||prev==')'||prev==ver)
     {
         std::cout<<"prev pos is:"<<prev<<" ,"<<std::endl;
-        s.insert(pos,"*");
+        s.insert(pos-1,"*");
     }
 
     s.insert(pos,std::to_string(calculate(chars,ver,val)));//传入一串式子（3x+3）
