@@ -65,57 +65,101 @@ bool valid_parentheses(std::string s)
 
 int calculate(MTL_A::Deque<char> cdp,char ver, double val)
 {
-    int arr1[10]={0};
-    int arr2[10]={0};
-    int t=0;
-    int* current_input=arr1;
-    char tmp;
+    //确保第一个数字的正负性被记录
+    bool is_oper1_neg=false;
+    bool is_oper2_neg=false;
+    bool do_multiplication=false;
+
+    MTL_A::Deque<int> operand_1;
+    MTL_A::Deque<int> operand_2;
+
+    MTL_A::Deque<int>* current_input=&operand_1;
+
+    char tmp_c;
     int res1=0;
     int res2=0;
+    int res=0;
+
+    if(cdp.front()=='-')
+    {
+        is_oper1_neg=true;
+        cdp.pop_front();
+    }
+
 
     while(!cdp.empty())
     {
-        tmp=cdp.front();
+        tmp_c=cdp.front();
 
-        if (std::isdigit(static_cast<unsigned char>(tmp)))
+        if (std::isdigit(static_cast<unsigned char>(tmp_c)))
         {
-            current_input[t] = tmp - '0';
-            t++;
+            current_input->push_back(tmp_c - '0');
         }
-        else if(tmp=='+'||tmp=='-')
+        else if(tmp_c=='+')
         {
-            current_input=arr2;
-            t=0;
+            current_input=&operand_2;
         }
-        else if(tmp==ver)
+        else if(tmp_c=='-')
         {
-            for(int i=0;i<10;i++)
+            current_input=&operand_2;
+            is_oper2_neg=true;
+        }
+        else if(tmp_c=='*')
+        {
+            current_input=&operand_2;
+            do_multiplication=true;
+        }
+        else if(tmp_c==ver)
+        {
+            int tmp_n=0;
+            while(!current_input->empty())
             {
-                res1=res1+current_input[i];
+               tmp_n=tmp_n+operand_1.front();
+                current_input->pop_front();
+                if(!current_input->empty())
+                    tmp_n=tmp_n*10;
             }
+            current_input->push_back(tmp_n*val);
         }
         else
-            static_assert("char","calculate:Un know ver.");
+            throw std::runtime_error(std::string("Unexpected character: '") + tmp_c + "'");
+
         cdp.pop_front();
     }
-    std::cout<<"-------show-----"<<std::endl;
     ct::print_container(cdp);
 
-    for(int i=0;i<10;i++)
+    ct::print_container(operand_1);
+    ct::print_container(operand_2);
+
+
+    while(!operand_1.empty())
     {
-        std::cout<<arr1[i];
+        res1=res1+operand_1.front();
+        operand_1.pop_front();
+        if(!operand_1.empty())
+            res1=res1*10;
     }
-    std::cout<<std::endl;
-    for(int i=0;i<10;i++)
+
+    while(!operand_2.empty())
     {
-        std::cout<<arr2[i];
+        res2=res2+operand_2.front();
+        operand_2.pop_front();
+        if(!operand_1.empty())
+            res1=res1*10;
     }
-    std::cout<<std::endl;
-    std::cout<<"-------show-----"<<std::endl;
 
+    if(is_oper1_neg)
+        res1=(0-res1);
 
+    if(is_oper2_neg)
+        res2=(0-res2);
 
-    return 0;
+    if(do_multiplication)
+        res=res1*res2;
+    else
+        res=res1+res2;
+
+    return res;
 
 }
 
@@ -130,6 +174,7 @@ std::string evaluate(std::string s, char ver, double val)
 
     std::cout<<"string"<<s<<" ,"<<std::endl;
 
+//while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
 
 
     int time=0;
@@ -152,7 +197,7 @@ std::string evaluate(std::string s, char ver, double val)
         else if(c==')')
             time=0;
     }
-    std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
+    //std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
 
     size_t pos = static_cast<size_t>(priority - s.data()); // 起点下标
     s.erase(pos, 1);
@@ -163,17 +208,38 @@ std::string evaluate(std::string s, char ver, double val)
     }
     s.erase(pos, 1);
 
+    std::cout<<"string of priority:"<<std::endl;
     ct::print_container(chars);
 
-    std::cout<<"string after:"<<s<<" ,"<<std::endl;
-    s.insert(pos,std::to_string(calculate(chars,ver,val)));
+    std::cout<<"string after take out priority:"<<s<<" ,"<<std::endl;
 
-    std::cout<<"string after2:"<<s<<" ,"<<std::endl;
+    char next = s[pos];
+    char prev = (pos > 0) ? s[pos - 1] : '\0';
+
+    if(std::isdigit(static_cast<unsigned char>(next))||next=='('||next==ver)
+    {
+        std::cout<<"next pos is:"<<next<<" ,"<<std::endl;
+        s.insert(pos,"*");
+    }
+
+    if(std::isdigit(static_cast<unsigned char>(prev))||prev==')'||prev==ver)
+    {
+        std::cout<<"prev pos is:"<<prev<<" ,"<<std::endl;
+        s.insert(pos,"*");
+    }
+
+    s.insert(pos,std::to_string(calculate(chars,ver,val)));//传入一串式子（3x+3）
+
+
+    //if(next==)
+    //返回后立即检测返回点左右是否有可以直接操作的数字
+    //不断执行 直到返回点两侧为空或是括号
+
+    std::cout<<"string after put back calculation results:"<<s<<" ,"<<std::endl;
+
 
 
     std::cout<<std::endl;
-
-
 
     return s;
 }
@@ -183,7 +249,7 @@ int main()
 {
     std::cout<<"Current C++ ver:"<<__cplusplus<<std::endl;
 
-
+/*
     std::stack<double> stack_1;
     for (double x : {222.22, 44.44, 789.6, 123.45, 88.64, 123.123})
         stack_1.push(x);
@@ -277,6 +343,8 @@ int main()
     ct::print_container(my_deque_2);
     ct::print_container(my_deque_1);
 
+*/
+
     std::cout<<"-----------PART I AND J--------------"<<std::endl;
 
     char No='a';
@@ -285,28 +353,18 @@ int main()
         std::cout<<No++<<":";
         if(valid_parentheses(test))
         {
-            std::cout<<"is valid, the answer will be:";
-            std::cout<<evaluate(test,'x',-3);
+            std::cout<<"-----------------------------------"<<std::endl;
+
+            evaluate(test,'x',-3);
+            //std::cout<<"is valid, the answer will be:";
+            //std::cout<<evaluate(test,'x',-3);
+            std::cout<<"-----------------------------------"<<std::endl;
         }
         else
             std::cout<<"is not valid";
 
         std::cout<<"\n";
     }
-
-    std::cout<<"----------------EX-------------------"<<std::endl;
-
-    std::cout<<"testing my qveue with deque:"<<std::endl;
-
-     MTL_A::Queue_D<double> my_queue_d_1;
-    for (double x : {222.22, 44.44, 789.6, 123.45, 88.64, 123.123})
-        my_queue_d_1.push(x);
-    MTL_A::Queue_D<std::string> my_queue_d_2;
-    for (std::string x : {"Mickey", "Minnie", "Donald", "Daisy", "Pluto", "Goofy"})
-        my_queue_d_2.push(x);
-
-    ct::print_container(my_queue_d_1);
-    ct::print_container(my_queue_d_2);
 
     return 0;
 }
