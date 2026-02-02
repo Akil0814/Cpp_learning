@@ -18,6 +18,12 @@
 // this program only work for C++20 or higher version
 // !-----------------------IMPROTANT-----------------------!
 
+
+//result shoud be:
+//a 468
+//d 23
+//e -212
+
 bool is_pair(char open, char close)
 {
     return (open == '(' && close == ')') ||
@@ -62,6 +68,79 @@ bool valid_parentheses(std::string s)
 
     return true;
 }
+
+static long long read_number(MTL_A::Deque<char>& q, char ver, double val)
+{
+    int sign = 1;
+    while (!q.empty() && (q.front() == '+' || q.front() == '-'))
+    {
+        if (q.front() == '-') sign = -sign;
+        q.pop_front();
+    }
+
+    bool has_digit = false;
+    long long x = 0;
+
+    while (!q.empty())
+    {
+        char c = q.front();
+
+        if (std::isdigit(static_cast<unsigned char>(c)))
+        {
+            has_digit = true;
+            x = x * 10 + (c - '0');
+            q.pop_front();
+        }
+        else if (c == ver)
+        {
+            // 这里按你的设计：遇到 ver 就把“当前已经读到的数”乘 val
+            // 注意：val 是 double，结果这里强转为整数，规则你自己定（截断/四舍五入）
+            x = static_cast<long long>(x * val);
+            q.pop_front();
+        }
+        else
+            break;
+    }
+
+    if (!has_digit) throw std::runtime_error("Expected a number");
+    return sign * x;
+}
+
+long long calculate_multi(MTL_A::Deque<char> cdp, char ver, double val)
+{
+    if (cdp.empty()) throw std::runtime_error("Empty expression");
+
+    long long result = 0;
+    long long term = read_number(cdp, ver, val);
+
+    while (!cdp.empty()) {
+        char op = cdp.front();
+        cdp.pop_front();
+
+        if (op!='+' && op!='-' && op!='*' && op!='/')
+            throw std::runtime_error(std::string("Unexpected operator: '") + op + "'");
+
+        long long rhs = read_number(cdp, ver, val);
+
+        if (op == '*') {
+            term = term * rhs;
+        } else if (op == '/') {
+            if (rhs == 0)
+                throw std::runtime_error("Division by zero");
+            term = term / rhs;
+        } else if (op == '+') {
+            result += term;
+            term = rhs;
+        } else if (op == '-') {
+            result += term;
+            term = -rhs;
+        }
+    }
+
+    result += term;
+    return result;
+}
+
 
 int calculate(MTL_A::Deque<char> cdp,char ver, double val)
 {
@@ -174,8 +253,8 @@ std::string evaluate(std::string s, char ver, double val)
 
     std::cout<<"string"<<s<<" ,"<<std::endl;
 
-while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
-{
+    while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
+    {
 
 
     int time=0;
@@ -229,7 +308,7 @@ while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
         s.insert(pos-1,"*");
     }
 
-    s.insert(pos,std::to_string(calculate(chars,ver,val)));//传入一串式子（3x+3）
+    s.insert(pos,std::to_string(calculate_multi(chars,ver,val)));//传入一串式子（3x+3）
 
 
     std::cout<<"string after put back calculation results:"<<s<<" ,"<<std::endl;
