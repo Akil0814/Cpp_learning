@@ -69,17 +69,18 @@ bool valid_parentheses(std::string s)
     return true;
 }
 
-static long long read_number(MTL_A::Deque<char>& q, char ver, double val)
+long long read_number(MTL_A::Deque<char>& q, char ver, double val)
 {
     int sign = 1;
-    while (!q.empty() && (q.front() == '+' || q.front() == '-'))
-    {
-        if (q.front() == '-') sign = -sign;
-        q.pop_front();
-    }
-
     bool has_digit = false;
     long long x = 0;
+
+    while (!q.empty() && (q.front() == '+' || q.front() == '-'))
+    {
+        if (q.front() == '-')
+            sign = -sign;
+        q.pop_front();
+    }
 
     while (!q.empty())
     {
@@ -93,8 +94,6 @@ static long long read_number(MTL_A::Deque<char>& q, char ver, double val)
         }
         else if (c == ver)
         {
-            // 这里按你的设计：遇到 ver 就把“当前已经读到的数”乘 val
-            // 注意：val 是 double，结果这里强转为整数，规则你自己定（截断/四舍五入）
             x = static_cast<long long>(x * val);
             q.pop_front();
         }
@@ -102,7 +101,9 @@ static long long read_number(MTL_A::Deque<char>& q, char ver, double val)
             break;
     }
 
-    if (!has_digit) throw std::runtime_error("Expected a number");
+    if (!has_digit)
+        throw std::runtime_error("Expected a number");
+
     return sign * x;
 }
 
@@ -113,7 +114,8 @@ long long calculate_multi(MTL_A::Deque<char> cdp, char ver, double val)
     long long result = 0;
     long long term = read_number(cdp, ver, val);
 
-    while (!cdp.empty()) {
+    while (!cdp.empty())
+    {
         char op = cdp.front();
         cdp.pop_front();
 
@@ -122,16 +124,23 @@ long long calculate_multi(MTL_A::Deque<char> cdp, char ver, double val)
 
         long long rhs = read_number(cdp, ver, val);
 
-        if (op == '*') {
+        if (op == '*')
+        {
             term = term * rhs;
-        } else if (op == '/') {
+        }
+        else if (op == '/')
+        {
             if (rhs == 0)
                 throw std::runtime_error("Division by zero");
             term = term / rhs;
-        } else if (op == '+') {
+        }
+        else if (op == '+')
+        {
             result += term;
             term = rhs;
-        } else if (op == '-') {
+        }
+        else if (op == '-')
+        {
             result += term;
             term = -rhs;
         }
@@ -247,8 +256,10 @@ std::string evaluate(std::string s, char ver, double val)
     double r=0;
     for(auto &c: s)
     {
-        if (c=='('||c=='['||c=='{')c = '(';
-        if (c==')'||c==']'||c=='}') c = ')';
+        if (c=='('||c=='['||c=='{')
+            c = '(';
+        if (c==')'||c==']'||c=='}')
+            c = ')';
     }
 
     std::cout<<"string"<<s<<" ,"<<std::endl;
@@ -277,7 +288,6 @@ std::string evaluate(std::string s, char ver, double val)
         else if(c==')')
             time=0;
     }
-    //std::cout<<"first num need to op:"<<*(priority+1)<<std::endl;
 
     size_t pos = static_cast<size_t>(priority - s.data()); // 起点下标
     s.erase(pos, 1);
@@ -313,7 +323,7 @@ std::string evaluate(std::string s, char ver, double val)
 
     std::cout<<"string after put back calculation results:"<<s<<" ,"<<std::endl;
 
-}
+    }
 
 //if string have more than one - or have +or *
 
@@ -439,7 +449,7 @@ int main()
             std::cout<<"-----------------------------------"<<std::endl;
         }
         else
-            std::cout<<"is not valid";
+            std::cout<<"is not valid"<<std::endl;
 
         std::cout<<"\n";
     }
