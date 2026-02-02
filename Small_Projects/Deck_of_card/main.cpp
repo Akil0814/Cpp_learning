@@ -17,10 +17,6 @@ Deck_of_card/
 #include <vector>
 #include <memory>
 
-#include "deck.cpp"
-#include "deck_factory.cpp"
-#include "card.cpp"
-
 #include "deck.h"
 #include "deck_factory.h"
 #include "card.h"
@@ -44,6 +40,8 @@ int main()
     {
         count++;
         shuffle_deck->perfect_shuffle();
+        std::cout << "Shuffling Time:"<<count << std::endl;
+        shuffle_deck->show_deck();
     } while ((*prototype_deck != *shuffle_deck));
 
     std::cout << "Finish Shuffling, it take:"<<count<<" to return the deck to its original" << std::endl;
