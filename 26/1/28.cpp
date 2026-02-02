@@ -264,9 +264,10 @@ std::string evaluate(std::string s, char ver, double val)
 
     std::cout<<"string"<<s<<" ,"<<std::endl;
 
-    while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
+    while((s.find('(') != std::string::npos)
+        ||(s.find(')') != std::string::npos)
+        ||(s.find('*') != std::string::npos))
     {
-
 
     int time=0;
     int max_time=0;
@@ -289,14 +290,35 @@ std::string evaluate(std::string s, char ver, double val)
             time=0;
     }
 
-    size_t pos = static_cast<size_t>(priority - s.data()); // 起点下标
-    s.erase(pos, 1);
-    while (pos < s.size() && s[pos] != ')')
+    if((s.find('(') == std::string::npos)&&(s.find(')') == std::string::npos))
     {
-        chars.push_back(s[pos]);
+        priority=&s[0];
+    }
+
+    size_t pos = static_cast<size_t>(priority - s.data());
+
+    if(s[pos]=='(')
+    {
+        std::cout<<"can find ()"<<std::endl;
+        s.erase(pos, 1);
+        while (pos < s.size() && s[pos] != ')')
+        {
+            chars.push_back(s[pos]);
+            s.erase(pos, 1);
+        }
         s.erase(pos, 1);
     }
-    s.erase(pos, 1);
+    else
+    {
+        std::cout<<"can't find ()"<<std::endl;
+        while (!s.empty())
+        {
+            chars.push_back(s[pos]);
+            s.erase(pos, 1);
+        }
+
+    }
+
 
     std::cout<<"string of priority:"<<std::endl;
     ct::print_container(chars);
@@ -325,9 +347,11 @@ std::string evaluate(std::string s, char ver, double val)
 
     }
 
+    //if((s.find('+') != std::string::npos)||(s.find('*') != std::string::npos)((s.find('/') != std::string::npos)))
+
+
 //if string have more than one - or have +or *
 
-    std::cout<<std::endl;
 
     return s;
 }
