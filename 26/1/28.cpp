@@ -174,7 +174,8 @@ std::string evaluate(std::string s, char ver, double val)
 
     std::cout<<"string"<<s<<" ,"<<std::endl;
 
-//while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
+while((s.find('(') != std::string::npos)||(s.find(')') != std::string::npos))
+{
 
 
     int time=0;
@@ -231,13 +232,11 @@ std::string evaluate(std::string s, char ver, double val)
     s.insert(pos,std::to_string(calculate(chars,ver,val)));//传入一串式子（3x+3）
 
 
-    //if(next==)
-    //返回后立即检测返回点左右是否有可以直接操作的数字
-    //不断执行 直到返回点两侧为空或是括号
-
     std::cout<<"string after put back calculation results:"<<s<<" ,"<<std::endl;
 
+}
 
+//if string have more than one - or have +or *
 
     std::cout<<std::endl;
 

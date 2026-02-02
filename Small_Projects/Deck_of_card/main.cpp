@@ -17,6 +17,10 @@ Deck_of_card/
 #include <vector>
 #include <memory>
 
+#include "deck.cpp"
+#include "deck_factory.cpp"
+#include "card.cpp"
+
 #include "deck.h"
 #include "deck_factory.h"
 #include "card.h"
