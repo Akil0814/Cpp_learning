@@ -1,9 +1,10 @@
-#include<iostream>
+//quadratic hashing
+#include <iostream>
 
-class my_hash_table
+class my_hash_table_quadratic
 {
 private:
-    enum class State
+    enum class state
     {
         empty_key,
         deleted_key,
@@ -13,40 +14,30 @@ private:
     struct slot
     {
         std::pair<int, std::string> kv;
-        State  s = State::empty_key;
+        state s = state::empty_key;
     };
 
-public:
+    static constexpr int table_size = 29;
+    slot table[table_size];
 
-    bool insert(int key, const std::string& value)
+    int h(int key) const
     {
-        int index=0;
-        for(int i=0;i<31;i++)
-        {
-            index=(h(key)+i*h2(key))%31;
-            if(table[index].s==State::empty_key||table[index].s==State::deleted_key)
-            {
-                table[index].kv.first=key;
-                table[index].kv.second=value;
-                table[index].s=State::has_key;
-                return true;
-            }
-        }
-
-        return false;
+        return key % table_size;
     }
 
-    bool insert(int key, const std::string& value, bool quadratic_hashing)
+public:
+    bool insert(int key, const std::string& value)
     {
-        int index=0;
-        for(int i=0;i<31;i++)
+        for (int i = 0; i < table_size; ++i)
         {
-            index=(h(key)+i*h2(key))%31;
-            if(table[index].s==State::empty_key||table[index].s==State::deleted_key)
+            int index = (h(key) + i * i) % table_size;
+
+            if (table[index].s == state::empty_key ||
+                table[index].s == state::deleted_key)
             {
-                table[index].kv.first=key;
-                table[index].kv.second=value;
-                table[index].s=State::has_key;
+                table[index].kv.first = key;
+                table[index].kv.second = value;
+                table[index].s = state::has_key;
                 return true;
             }
         }
@@ -56,16 +47,18 @@ public:
 
     bool remove(int key)
     {
-        int index=0;
-        for(int i=0;i<31;i++)
+        for (int i = 0; i < table_size; ++i)
         {
-            index=(h(key)+i*h2(key))%31;
-            if(table[index].s==State::has_key && table[index].kv.first==key)
+            int index = (h(key) + i * i) % table_size;
+
+            if (table[index].s == state::has_key &&
+                table[index].kv.first == key)
             {
-                table[index].s=State::deleted_key;
+                table[index].s = state::deleted_key;
                 return true;
             }
-            else if(table[index].s==State::empty_key)
+
+            if (table[index].s == state::empty_key)
             {
                 return false;
             }
@@ -76,33 +69,32 @@ public:
 
     void print() const
     {
-        for(auto &iter: table)
+
+        for (int i = 0; i < table_size; ++i)
         {
-            if(iter.s==State::has_key)
+            std::cout << "[" << i << "] ";
+
+            if (table[i].s == state::has_key)
             {
-                std::cout<<iter.kv.first<<" "<<iter.kv.second<<std::endl;
+                std::cout << table[i].kv.first << " -> " << table[i].kv.second;
             }
+            else if (table[i].s == state::deleted_key)
+            {
+                std::cout << "<deleted>";
+            }
+            else
+            {
+                std::cout << "<empty>";
+            }
+
+            std::cout << '\n';
         }
     }
-
-private:
-    slot table[31];
-
-    int h(int key) const
-    {
-        return key%31;
-    }
-
-    int h2(int key) const
-    {
-        return 13-(key%13);
-    }
-
 };
 
 int main()
 {
-    my_hash_table table;
+    my_hash_table_quadratic table;
 
     table.insert(18, "Laguna Niguel");
     table.insert(41, "Mission Viejo");
@@ -144,7 +136,6 @@ int main()
     table.insert(62, "Laguna Hills");
 
     table.print();
-
 
     return 0;
 }
