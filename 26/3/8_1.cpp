@@ -28,18 +28,47 @@ private:
 public:
     bool insert(int key, const std::string& value)
     {
+        int first_deleted = -1;
+
         for (int i = 0; i < table_size; ++i)
         {
             int index = (h(key) + i * i) % table_size;
 
-            if (table[index].s == state::empty_key ||
-                table[index].s == state::deleted_key)
+            if (table[index].s == state::has_key &&
+                table[index].kv.first == key)
             {
+                table[index].kv.second = value;
+                return true;
+            }
+
+            if (table[index].s == state::deleted_key)
+            {
+                if (first_deleted == -1)
+                {
+                    first_deleted = index;
+                }
+                continue;
+            }
+
+            if (table[index].s == state::empty_key)
+            {
+                if (first_deleted != -1)
+                {
+                    index = first_deleted;
+                }
                 table[index].kv.first = key;
                 table[index].kv.second = value;
                 table[index].s = state::has_key;
                 return true;
             }
+        }
+
+        if (first_deleted != -1)
+        {
+            table[first_deleted].kv.first = key;
+            table[first_deleted].kv.second = value;
+            table[first_deleted].s = state::has_key;
+            return true;
         }
 
         return false;
