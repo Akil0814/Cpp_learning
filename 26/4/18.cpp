@@ -307,26 +307,40 @@ int main()
                  "New York",    "Boston"});
 
     const vector<tuple<string, string, int>> edges = {
-        {"Seattle", "San Francisco", 807}, {"Seattle", "Denver", 1331},
-        {"Seattle", "Chicago", 2097},      {"San Francisco", "Los Angeles", 381},
-        {"San Francisco", "Denver", 1267}, {"Los Angeles", "Denver", 1015},
-        {"Los Angeles", "Kansas City", 1663},
-        {"Los Angeles", "Dallas", 1435},
+        {"Seattle", "San Francisco", 807},
+        {"Seattle", "Denver", 1331},
+
+        {"San Francisco", "Los Angeles", 381},
+
+        {"Los Angeles", "Denver", 1015},
+
         {"Denver", "Chicago", 1003},
-        {"Denver", "Kansas City", 599},
-        {"Chicago", "Kansas City", 533},
-        {"Chicago", "New York", 787},
+        {"Denver", "San Francisco", 1267},
+
+        {"Chicago", "Seattle", 2097},
         {"Chicago", "Boston", 983},
-        {"Kansas City", "Dallas", 496},
-        {"Kansas City", "New York", 1260},
+
+        {"Kansas City", "Denver", 599},
+        {"Kansas City", "Chicago", 533},
+        {"Kansas City", "Los Angeles", 1663},
         {"Kansas City", "Atlanta", 864},
-        {"Dallas", "Houston", 239},
+        {"Kansas City", "New York", 1260},
+
         {"Dallas", "Atlanta", 781},
+        {"Dallas", "Kansas City", 496},
+        {"Dallas", "Los Angeles", 1435},
+
+        {"Houston","Dallas", 239},
         {"Houston", "Atlanta", 810},
-        {"Houston", "Miami", 1187},
+
+        {"Miami","Houston",  1187},
+
         {"Atlanta", "Miami", 661},
-        {"Atlanta", "New York", 888},
-        {"New York", "Boston", 214},
+
+        {"New York","Atlanta", 888},
+        {"New York", "Chicago", 787},
+
+        {"Boston", "New York", 214},
     };
 
     for (const auto& [from, to, weight] : edges)
