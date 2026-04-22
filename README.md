@@ -291,30 +291,47 @@
 ### 7
 <details>
 
+	10.二叉树的创建、深度优先遍历、广度优先遍历
 
 </details>
 
 ### 8
 <details>
 
+	18.leetcode 13 罗马数字转整数
+	18(2).leetcode 14 最长公共前缀
+	19.leetcode 20 有效括号
+	19(2).leetcode 21 合并两个有序链表
+	19(3).leetcode 26 删除有序数组中的重复项
+	19(4).leetcode 27 移除元素
+	19(5).KMP 实现 strStr()
+	19(6).leetcode 35 搜索插入位置
+	20.leetcode 58 最后一个单词的长度
+	20(2).leetcode 66 加一
+	21.leetcode 69 x 的平方根（牛顿法）
 
 </details>
 
 ### 9
 <details>
 
+	3.leetcode 70 爬楼梯（动态规划）
+	8.leetcode 88 合并两个有序数组（从后往前双指针）
 
 </details>
 
 ### 10
 <details>
 
+	1.leetcode 1518 换酒问题（模拟）
+	19.leetcode 94 二叉树中序遍历
 
 </details>
 
 ### 12
 <details>
 
+	8.数组下标与指针的等价关系：`a[i]`、`*(a+i)`、`i[a]`
 
 </details>
 
@@ -323,5 +340,52 @@
 ### 1
 <details>
 
+	_check_container_type.h.C++20 concepts：Iterable / StackLike / QueueLike
+	_print_container.h.基于 concepts 的函数模板重载打印容器
+	_container_modify.h.基于 concepts 的泛型删除 / pop_until_removed
+	_my_link_list.h.双向链表模板
+	_my_stack.h.基于链表实现栈
+	_my_queue.h.基于链表实现队列
+	_my_deque.h.基于链表实现双端队列
+	_my_queue_with_deque.h.基于 deque 实现队列适配器
+	19.递归判断回文串（忽略大小写与非字母数字）
+	25.SQLite3：建库、建表、prepared statement 插入与查询
+	26.vector::end() 与尾元素访问
+	28.C++20 concepts + 自定义容器 + 括号匹配 + 表达式求值
+	30.自定义队列的基本使用
+
+</details>
+
+### 2
+<details>
+
+	11.vector 的 insert / erase 与迭代器位置变化
+	12.`new A`、`new A()`、临时对象构造
+	13.用数组 / vector 下标模拟二叉搜索树
+	14.函数模板打印数组与 `string::size()`
+	22.XOR Cipher 基础实现
+	22(2).XOR 加密 + 二进制文件读写
+	22(3).凭据文件格式设计、key 混淆与文件解析
+
+</details>
+
+### 3
+<details>
+
+	1.手写优先队列（堆）+ 急诊病人调度模拟
+	8_0.双重散列哈希表
+	8_1.二次探测哈希表
+	8_2.SQLite3 基础操作：`sqlite3_exec` 与回调打印
+	11.vector::insert 基本用法
+	16.Skip List 跳表：查找、插入、删除
+
+</details>
+
+### 4
+<details>
+
+	6.红黑树插入与颜色修复
+	11.图的 DFS / BFS：邻接表、邻接矩阵、发现边与非树边
+	18.图的边分类：discovery / forward / back / cross edge
 
 </details>
