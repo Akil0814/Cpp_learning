@@ -5,7 +5,6 @@
 #include <string>
 #include <tuple>
 #include <unordered_map>
-#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -36,12 +35,12 @@ class Graph {
         }
     }
 
-    void AddBidirectionalEdge(const string& from, const string& to, int weight)
+    void AddDirectedEdge(const string& from, const string& to, int weight)
     {
         const int u = city_id_.at(from);
         const int v = city_id_.at(to);
+
         adjacency_[u].push_back({u, v, weight});
-        adjacency_[v].push_back({v, u, weight});
     }
 
     void Finalize()
@@ -71,36 +70,54 @@ class Graph {
     {
         ClassifiedEdges result;
         const int n = VertexCount();
-        vector<bool> visited(n, false);
-        unordered_set<long long> classified_edges;
+        vector<int> color(n, 0);  // 0=white, 1=gray, 2=black
+        vector<int> tin(n, -1);
+        vector<int> tout(n, -1);
+        vector<DirectedEdge> black_target_edges;
+        int timer = 0;
 
         function<void(int)> dfs = [&](int u)
         {
-            visited[u] = true;
+            color[u] = 1;
+            tin[u] = ++timer;
 
             for (const DirectedEdge& edge : adjacency_[u])
             {
-                const long long key = EdgeKey(edge.from, edge.to);
-                if (!classified_edges.insert(key).second)
-                {
-                    continue;
-                }
-
                 const int v = edge.to;
-                if (!visited[v])
+                if (color[v] == 0)
                 {
                     result.discovery.push_back(edge);
                     result.discovery_total_distance += edge.weight;
                     dfs(v);
                 }
-                else
+                else if (color[v] == 1)
                 {
                     result.back.push_back(edge);
                 }
+                else
+                {
+                    black_target_edges.push_back(edge);
+                }
             }
+
+            color[u] = 2;
+            tout[u] = ++timer;
         };
 
         dfs(start);
+
+        for (const DirectedEdge& edge : black_target_edges)
+        {
+            if (tin[edge.from] < tin[edge.to] && tout[edge.to] < tout[edge.from])
+            {
+                result.forward.push_back(edge);
+            }
+            else
+            {
+                result.cross.push_back(edge);
+            }
+        }
+
         return result;
     }
 
@@ -207,59 +224,33 @@ class Graph {
         return result;
     }
 
-    bool IsStronglyConnected() const
+    int ReachableCountFrom(int start) const
     {
         const int n = VertexCount();
-        if (n == 0)
+        vector<bool> visited(n, false);
+        function<void(int)> dfs = [&](int u)
         {
-            return true;
-        }
-
-        auto dfs_reach = [&](const vector<vector<DirectedEdge>>& graph, int start)
-        {
-            vector<bool> visited(n, false);
-            function<void(int)> dfs = [&](int u)
-            {
-                visited[u] = true;
-                for (const DirectedEdge& edge : graph[u])
-                {
-                    if (!visited[edge.to])
-                    {
-                        dfs(edge.to);
-                    }
-                }
-            };
-            dfs(start);
-            return visited;
-        };
-
-        const vector<bool> from_zero = dfs_reach(adjacency_, 0);
-        for (bool ok : from_zero)
-        {
-            if (!ok)
-            {
-                return false;
-            }
-        }
-
-        vector<vector<DirectedEdge>> reversed(n);
-        for (int u = 0; u < n; ++u)
-        {
+            visited[u] = true;
             for (const DirectedEdge& edge : adjacency_[u])
             {
-                reversed[edge.to].push_back({edge.to, u, edge.weight});
+                if (!visited[edge.to])
+                {
+                    dfs(edge.to);
+                }
             }
-        }
+        };
 
-        const vector<bool> to_zero = dfs_reach(reversed, 0);
-        for (bool ok : to_zero)
+        dfs(start);
+
+        int reachable_count = 0;
+        for (bool ok : visited)
         {
-            if (!ok)
+            if (ok)
             {
-                return false;
+                ++reachable_count;
             }
         }
-        return true;
+        return reachable_count;
     }
 
    private:
@@ -267,12 +258,6 @@ class Graph {
     unordered_map<string, int> city_id_;
     vector<vector<DirectedEdge>> adjacency_;
 
-    static long long EdgeKey(int a, int b)
-    {
-        const int x = min(a, b);
-        const int y = max(a, b);
-        return (static_cast<long long>(x) << 32) | static_cast<unsigned int>(y);
-    }
 };
 
 void PrintEdgeGroup(const Graph& graph, const string& label, const vector<DirectedEdge>& edges)
@@ -305,6 +290,10 @@ int main()
     Graph graph({"Seattle", "San Francisco", "Los Angeles", "Denver",   "Chicago",
                  "Kansas City", "Dallas",    "Houston",     "Atlanta",  "Miami",
                  "New York",    "Boston"});
+    Graph reverse_graph({"Seattle", "San Francisco", "Los Angeles", "Denver",   "Chicago",
+                         "Kansas City", "Dallas",    "Houston",     "Atlanta",  "Miami",
+                         "New York",    "Boston"});
+
 
     const vector<tuple<string, string, int>> edges = {
         {"Seattle", "San Francisco", 807},
@@ -345,28 +334,34 @@ int main()
 
     for (const auto& [from, to, weight] : edges)
     {
-        graph.AddBidirectionalEdge(from, to, weight);
+        graph.AddDirectedEdge(from, to, weight);
+        reverse_graph.AddDirectedEdge(to, from, weight);
     }
     graph.Finalize();
+    reverse_graph.Finalize();
 
     const int start = graph.GetCityId("Denver");
 
     const ClassifiedEdges dfs_edges = graph.ClassifyDfsFrom(start);
     const ClassifiedEdges bfs_edges = graph.ClassifyBfsFrom(start);
+    const ClassifiedEdges reversed_dfs_edges = reverse_graph.ClassifyDfsFrom(start);
 
     PrintPartResult(graph, "Part A - DFS starting at Denver", dfs_edges);
     cout << "\n";
     PrintPartResult(graph, "Part B - BFS starting at Denver", bfs_edges);
     cout << "\n\nPart C - Strong Connectivity\n";
-    if (graph.IsStronglyConnected())
+    const bool original_reaches_all = graph.ReachableCountFrom(start) == graph.VertexCount();
+    const bool reverse_reaches_all = reverse_graph.ReachableCountFrom(start) == reverse_graph.VertexCount();
+    if (original_reaches_all && reverse_reaches_all)
     {
-        cout << "The map in the PDF is drawn as an undirected graph, so the most precise answer is that it is connected, not \"strongly connected.\"\n";
-        cout << "If every road is treated as two directed edges, one in each direction, then it is strongly connected because every city can reach every other city.\n";
+        cout << "Yes. DFS from Denver reaches every city in the original graph, and DFS from Denver also reaches every city in the reversed graph.\n";
     }
     else
     {
-        cout << "No. At least one city cannot be reached from another in the directed graph.\n";
+        cout << "No. Either the original graph or the reversed graph cannot reach every city from Denver, so the graph is not strongly connected.\n";
     }
+    cout << "\n";
+    PrintPartResult(reverse_graph, "Reversed Graph - DFS starting at Denver", reversed_dfs_edges);
 
     return 0;
 }
